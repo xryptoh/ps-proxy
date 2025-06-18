@@ -1,6 +1,6 @@
 # Прокси-сервер с поддержкой AD-аутентификации
 $listener = New-Object System.Net.HttpListener
-$listener.Prefixes.Add("http://+:8888/")
+$listener.Prefixes.Add("http://remote_ip:8888/")
 $listener.Start()
 Write-Host "AD-прокси запущен на порту 8888. Ожидание запросов..."
 
