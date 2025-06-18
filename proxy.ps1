@@ -1,8 +1,7 @@
-# Прокси-сервер с поддержкой AD-аутентификации
 $listener = New-Object System.Net.HttpListener
 $listener.Prefixes.Add("http://remote_ip:8888/")
 $listener.Start()
-Write-Host "AD-прокси запущен на порту 8888. Ожидание запросов..."
+Write-Host "AD-proxy server started. Listening..."
 
 while ($true) {
     $context = $listener.GetContext()
@@ -14,13 +13,11 @@ while ($true) {
     $method = $request.HttpMethod
     $url = $request.Url.OriginalString
 
-    # Перестраиваем URL, если клиент отправил только путь
     if ($url -notmatch "^https?://") {
         $host = $request.Headers["Host"]
         $url = "http://$host$url"
     }
 
-    # Копируем заголовки (без Host)
     $headers = @{}
     foreach ($key in $request.Headers.AllKeys) {
         if ($key -ne "Host") {
@@ -44,7 +41,6 @@ while ($true) {
         Write-Host "[!] $responseBody"
     }
 
-    # Отправка ответа клиенту
     $buffer = [System.Text.Encoding]::UTF8.GetBytes($responseBody)
     $context.Response.StatusCode = $statusCode
     $context.Response.ContentLength64 = $buffer.Length
